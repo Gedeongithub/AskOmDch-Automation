@@ -7,12 +7,14 @@ import static org.testng.Assert.assertEquals;
 
 public class CheckoutTest extends BaseTest {
 
+
     @Test
     public void testCheckout(){
         var store = homePage.clickStoreMenu();
         store.dropDownToSelect("men");
         store.addProductToCart();
 
+//        store.hoverOverCart();
         store.hoverOverCart();
         var shippingPage =store.checkOut();
         shippingPage.fillShippingData();
