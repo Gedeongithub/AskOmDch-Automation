@@ -8,6 +8,7 @@ public class TestSlider extends BaseTest {
     @Test
     public void TestFilterByPriceSliding(){
         var slider = homePage.clickStoreMenu();
+        // filter products by price by sliding to certain price range
         slider.slidePrice();
     }
 }

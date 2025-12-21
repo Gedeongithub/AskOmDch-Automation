@@ -45,16 +45,57 @@ public class StorePage {
     //method to filter product by price sliding
 
     public void slidePrice() {
-        By button = By.xpath("//button[contains(text(),'Filter')]");
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("""
-                let slider = document.querySelector('.price_slider');
-                slider.setAttribute('data-values','20,80');
-                """);
-        Actions action = new Actions(driver);
-        action.scrollToElement(driver.findElement(button)).perform();
-        driver.findElement(button).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        By sliderLocator = By.cssSelector(".price_slider");
+        By handlesLocator = By.cssSelector(".price_slider .ui-slider-handle");
+        By filterBtn = By.xpath("//button[contains(text(),'Filter')]");
+
+
+        WebElement slider = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(sliderLocator)
+        );
+
+
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView(true);", slider);
+
+
+        List<WebElement> handles = wait.until(
+                ExpectedConditions.numberOfElementsToBeMoreThan(handlesLocator, 1)
+        );
+
+        WebElement minHandle = handles.get(0);
+        WebElement maxHandle = handles.get(1);
+
+
+        int sliderWidth = slider.getSize().getWidth();
+
+
+        int minOffset = (int) (sliderWidth * 0.2);
+        int maxOffset = (int) (sliderWidth * -0.2);
+
+        Actions actions = new Actions(driver);
+
+
+        actions.clickAndHold(minHandle)
+                .moveByOffset(minOffset, 0)
+                .pause(Duration.ofMillis(200))
+                .release()
+                .perform();
+
+
+        actions.clickAndHold(maxHandle)
+                .moveByOffset(maxOffset, 0)
+                .pause(Duration.ofMillis(200))
+                .release()
+                .perform();
+
+        // Click Filter
+        wait.until(ExpectedConditions.elementToBeClickable(filterBtn)).click();
     }
+
 
     // Method to add product to cart
     public void dropDownToSelect(String category){
